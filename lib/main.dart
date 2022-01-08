@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
     styleimage = File(pickstyleimage!.path);
     final pickobjectimage =
         await ImagePicker().getImage(source: ImageSource.gallery);
+    objectimage = File(pickobjectimage!.path);
     setState(() {});
   }
 
@@ -44,30 +46,52 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: Column(
           children: [
-            styleimage == null
-                ? Text("Please pick a style image to upload")
-                : Image.file(styleimage!),
-            objectimage == null
-                ? Text("Please pick an object image to upload")
-                : Image.file(objectimage!),
-            TextButton.icon(
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.deepPurpleAccent)),
-                onPressed: () => {},
-                icon: Icon(
-                  Icons.file_upload,
-                  color: Colors.white,
-                ),
-                label: Text(
-                  "Upload Image",
-                  style: TextStyle(color: Colors.white),
-                )),
+            Expanded(
+              child: styleimage == null
+                  ? Text("Please pick a style image to upload")
+                  : Image.file(styleimage!),
+            ),
+            Expanded(
+              child: objectimage == null
+                  ? Text("Please pick an object image to upload")
+                  : Image.file(objectimage!),
+            ),
+            styleimage == null && objectimage == null
+                ? TextButton.icon(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.deepPurpleAccent)),
+                    onPressed: () => {},
+                    icon: Icon(
+                      Icons.file_upload,
+                      color: Colors.white,
+                    ),
+                    label: Text(
+                      "Upload Image",
+                      style: TextStyle(color: Colors.white),
+                    ))
+                : TextButton.icon(
+                    style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.deepPurpleAccent)),
+                    onPressed: () => {
+                          //call python api
+                        },
+                    icon: Icon(
+                      Icons.file_upload,
+                      color: Colors.white,
+                    ),
+                    label: Text(
+                      "Mix Styles!",
+                      style: TextStyle(color: Colors.white),
+                    )),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => getStyleImage(),
+        onPressed: () {
+          getStyleImage();
+        },
         child: Icon(Icons.add_a_photo),
       ),
     );
