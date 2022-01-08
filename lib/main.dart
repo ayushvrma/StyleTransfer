@@ -27,14 +27,8 @@ class _HomePageState extends State<HomePage> {
     final pickstyleimage =
         await ImagePicker().getImage(source: ImageSource.gallery);
     styleimage = File(pickstyleimage!.path);
-    setState(() {});
-    getObjectImage();
-  }
-
-  getObjectImage() async {
     final pickobjectimage =
         await ImagePicker().getImage(source: ImageSource.gallery);
-    objectimage = File(pickobjectimage!.path);
     setState(() {});
   }
 
@@ -47,31 +41,33 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text("Style Transfer"),
       ),
-      body: Column(
-        children: [
-          styleimage == null
-              ? Text("Please pick a style image to upload")
-              : Image.file(styleimage!),
-          objectimage == null
-              ? Text("Please pick an object image to upload")
-              : Image.file(objectimage!),
-          TextButton.icon(
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(Colors.deepPurpleAccent)),
-              onPressed: () => {},
-              icon: Icon(
-                Icons.file_upload,
-                color: Colors.white,
-              ),
-              label: Text(
-                "Upload Image",
-                style: TextStyle(color: Colors.white),
-              )),
-        ],
+      body: Center(
+        child: Column(
+          children: [
+            styleimage == null
+                ? Text("Please pick a style image to upload")
+                : Image.file(styleimage!),
+            objectimage == null
+                ? Text("Please pick an object image to upload")
+                : Image.file(objectimage!),
+            TextButton.icon(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.deepPurpleAccent)),
+                onPressed: () => {},
+                icon: Icon(
+                  Icons.file_upload,
+                  color: Colors.white,
+                ),
+                label: Text(
+                  "Upload Image",
+                  style: TextStyle(color: Colors.white),
+                )),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: getStyleImage(),
+        onPressed: () => getStyleImage(),
         child: Icon(Icons.add_a_photo),
       ),
     );
