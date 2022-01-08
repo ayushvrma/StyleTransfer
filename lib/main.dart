@@ -23,13 +23,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  getImage() async {
-    final pickimage = await ImagePicker().getImage(source: ImageSource.gallery);
-    selectedimg = File(pickimage!.path);
+  getStyleImage() async {
+    final pickstyleimage =
+        await ImagePicker().getImage(source: ImageSource.gallery);
+    styleimage = File(pickstyleimage!.path);
+    setState(() {});
+    getObjectImage();
+  }
+
+  getObjectImage() async {
+    final pickobjectimage =
+        await ImagePicker().getImage(source: ImageSource.gallery);
+    objectimage = File(pickobjectimage!.path);
     setState(() {});
   }
 
-  File? selectedimg;
+  File? styleimage;
+  File? objectimage;
   String? message;
   @override
   Widget build(BuildContext context) {
@@ -39,9 +49,12 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          selectedimg == null
-              ? Text("Please pick an image to upload")
-              : Image.file(selectedimg!),
+          styleimage == null
+              ? Text("Please pick a style image to upload")
+              : Image.file(styleimage!),
+          objectimage == null
+              ? Text("Please pick an object image to upload")
+              : Image.file(objectimage!),
           TextButton.icon(
               style: ButtonStyle(
                   backgroundColor:
@@ -56,6 +69,10 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(color: Colors.white),
               )),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: getStyleImage(),
+        child: Icon(Icons.add_a_photo),
       ),
     );
   }
