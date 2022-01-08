@@ -1,17 +1,8 @@
-# style_transfer
+# Style Transfer
 
-A new Flutter project.
+A Flutter Application for the deployment of a Style Mixing CNN that I trained to take the style of one image and apply it to the other and produce a final image
 
-## Getting Started
+#
+The model script is in python so it's integrated using Flask in a Flutter i.e. Dart Backend to run custom APIs.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# StyleTransfer
+ngrok is used to transfer images to localhost server (for now).

@@ -8,9 +8,11 @@ class ShowImage extends StatefulWidget {
 class _ShowImageState extends State<ShowImage> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Container(
-      child: Text("image ig"),
-    ));
+    return Scaffold(
+      body: Center(
+          child: Container(
+        child: Text("image ig"),
+      )),
+    );
   }
 }
