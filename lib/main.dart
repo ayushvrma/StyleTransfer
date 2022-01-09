@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -32,6 +34,33 @@ class _HomePageState extends State<HomePage> {
     final pickobjectimage =
         await ImagePicker().getImage(source: ImageSource.gallery);
     objectimage = File(pickobjectimage!.path);
+    setState(() {});
+  }
+
+  uploadImage() async {
+    final request = http.MultipartRequest(
+        "POST", Uri.parse("https://bb0a-27-0-178-125.ngrok.io/upload"));
+
+    final headers = {"Content-type": "multipart/form-data"};
+
+    request.files.add(http.MultipartFile(
+      'styleimage',
+      styleimage!.readAsBytes().asStream(),
+      styleimage!.lengthSync(),
+      filename: styleimage!.path.split("/").last,
+    ));
+    request.files.add(http.MultipartFile(
+      'objectimage',
+      objectimage!.readAsBytes().asStream(),
+      objectimage!.lengthSync(),
+      filename: objectimage!.path.split("/").last,
+    ));
+
+    request.headers.addAll(headers);
+    final response = await request.send();
+    http.Response res = await http.Response.fromStream(response);
+    final resJson = jsonDecode(res.body);
+    message = resJson['message'];
     setState(() {});
   }
 
