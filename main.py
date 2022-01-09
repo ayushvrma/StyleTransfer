@@ -3,6 +3,7 @@ import werkzeug
 import base64
 from io import BytesIO
 from PIL import Image
+import os
 
 
 
@@ -20,7 +21,8 @@ def upload():
 
         #return image as bytedata
         # im_arr: image in Numpy one-dim array format.
-        img = Image.open('test.jpeg')
+        cwd = os.getcwd()
+        img = Image.open(f'{cwd}/outputs/test.jpeg')
         im_file = BytesIO()
         img.save(im_file, format="JPEG")
         im_bytes = im_file.getvalue()  # im_bytes: image in binary format.
@@ -28,7 +30,7 @@ def upload():
         return jsonify({'image': im_b64.decode('utf-8')})
 
     else:
-        img = Image.open('error.jpg')
+        img = Image.open(f'{cwd}/outputs/error.jpeg')
         im_file = BytesIO()
         img.save(im_file, format="JPEG")
         im_bytes = im_file.getvalue()  # im_bytes: image in binary format.
