@@ -1,14 +1,14 @@
-class Model:
-    from PIL import Image
-    from io import BytesIO
-    import matplotlib.pyplot as plt
-    import numpy as np
+from PIL import Image
+from io import BytesIO
+import matplotlib.pyplot as plt
+import numpy as np
 
-    import torch
-    import torch.optim as optim
-    import requests
-    from torchvision import transforms, models
-    import os
+import torch
+import torch.optim as optim
+import requests
+from torchvision import transforms, models
+import os
+class Model:
     # get the "features" portion of VGG19 (we will not need the "classifier" portion)
 
     def __init__(self, stylefilename, objectfilename):
@@ -16,7 +16,6 @@ class Model:
         this.stylefilename = stylefilename
         this.objectfilename = objectfilename
 
-    vgg.to(device)
     def load_image(img_path, max_size=400, shape=None):
         ''' Load in and transform an image, making sure the image
         is <= 400 pixels in the x-y dims.'''
@@ -62,19 +61,17 @@ class Model:
 
         return image
     # display the images
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 10))
-    # content and style ims side-by-side
-    ax1.imshow(im_convert(content))
-    ax2.imshow(im_convert(style))
+    # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 10))
+    # # content and style ims side-by-side
+    # ax1.imshow(im_convert(content))
+    # ax2.imshow(im_convert(style))
     # print out VGG19 structure so you can see the names of various layers
-    print(vgg)
+    # print(vgg)
     def get_features(image, model, layers=None):
         """ Run an image forward through a model and get the features for 
             a set of layers. Default layers are for VGGNet matching Gatys et al (2016)
         """
 
-        ## TODO: Complete mapping layer names of PyTorch's VGGNet to names from the paper
-        ## Need the layers for the content and style representations of an image
         if layers is None:
             layers = {'0': 'conv1_1',
                     '5': 'conv2_1',
@@ -110,7 +107,9 @@ class Model:
         return gram
 
     def main():
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         vgg = models.vgg19(pretrained=True).features
+        vgg.to(device)
 
         # freeze all VGG parameters since we're only optimizing the target image
         for param in vgg.parameters():
@@ -119,10 +118,9 @@ class Model:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         cwd = os.getcwd()
         # print(cwd)
-        content = load_image(f'{cwd}/uploads/{objectfilename}').to(device)
+        content = load_image(f'{cwd}/uploads/cat.jpg').to(device)
         # Resize style to match content, makes code easier
-        style = load_image(f'{cwd}/images/{stylefilename}',
-                        shape=content.shape[-2:]).to(device)
+        style = load_image(f'{cwd}/uploads/starrynight.jpg',shape=content.shape[-2:]).to(device)
 
         # get content and style features only once before forming the target image
         content_features = get_features(content, vgg)
@@ -191,15 +189,15 @@ class Model:
             # display intermediate images and print the loss
             if ii % show_every == 0:
                 print('Total loss: ', total_loss.item())
-                plt.imshow(im_convert(target))
-                plt.show()
+                # plt.imshow(im_convert(target))
+                # plt.show()
 
         # display content and final, target image
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 10))
-        ax1.imshow(im_convert(content))
-        ax2.imshow(im_convert(target))
-        return target
+        # ax1.imshow(im_convert(content))
+        # ax2.imshow(im_convert(target))
+        return im_convert(target)
 
 
-if __name__ == '__main__':
-    main()
+    if __name__ == '__main__':
+        main()

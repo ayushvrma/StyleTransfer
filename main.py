@@ -4,7 +4,7 @@ import base64
 from io import BytesIO
 from PIL import Image
 import os
-
+import model
 
 
 app = Flask(__name__)
@@ -22,7 +22,9 @@ def upload():
         #return image as bytedata
         # im_arr: image in Numpy one-dim array format.
         cwd = os.getcwd()
-        img = Image.open(f'{cwd}/outputs/test.jpeg')
+        output_img = Model(stylefilename, objectfilename)
+        # img = Image.open(f'{cwd}/outputs/test.jpeg')
+        img = output_img
         im_file = BytesIO()
         img.save(im_file, format="JPEG")
         im_bytes = im_file.getvalue()  # im_bytes: image in binary format.
