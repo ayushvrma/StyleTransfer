@@ -11,6 +11,11 @@ class Model:
     import os
     # get the "features" portion of VGG19 (we will not need the "classifier" portion)
 
+    def __init__(self, stylefilename, objectfilename):
+        # Instance variable
+        this.stylefilename = stylefilename
+        this.objectfilename = objectfilename
+
     vgg.to(device)
     def load_image(img_path, max_size=400, shape=None):
         ''' Load in and transform an image, making sure the image
@@ -42,12 +47,7 @@ class Model:
         return image
     # load in content and style image
 
-    cwd = os.getcwd()
-    # print(cwd)
-    content = load_image(f'{cwd}/images/shreshtha.jpg').to(device)
-    # Resize style to match content, makes code easier
-    style = load_image(f'{cwd}/images/nighty.webp',
-                    shape=content.shape[-2:]).to(device)
+
 
     # helper function for un-normalizing an image 
     # and converting it from a Tensor image to a NumPy image for display
@@ -117,8 +117,14 @@ class Model:
             param.requires_grad_(False)
         # move the model to GPU, if available
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        cwd = os.getcwd()
+        # print(cwd)
+        content = load_image(f'{cwd}/uploads/{objectfilename}').to(device)
+        # Resize style to match content, makes code easier
+        style = load_image(f'{cwd}/images/{stylefilename}',
+                        shape=content.shape[-2:]).to(device)
 
-    # get content and style features only once before forming the target image
+        # get content and style features only once before forming the target image
         content_features = get_features(content, vgg)
         style_features = get_features(style, vgg)
 
@@ -144,54 +150,55 @@ class Model:
         # for displaying the target image, intermittently
         show_every = 400
 
-    # iteration hyperparameters
-    optimizer = optim.Adam([target], lr=0.003)
-    steps = 2000  # decide how many iterations to update your image (5000)
+        # iteration hyperparameters
+        optimizer = optim.Adam([target], lr=0.003)
+        steps = 2000  # decide how many iterations to update your image (5000)
 
-    for ii in range(1, steps+1):
+        for ii in range(1, steps+1):
 
-        # get the features from your target image
-        target_features = get_features(target, vgg)
+            # get the features from your target image
+            target_features = get_features(target, vgg)
 
-        # the content loss
-        content_loss = torch.mean(
-            (target_features['conv4_2'] - content_features['conv4_2'])**2)
+            # the content loss
+            content_loss = torch.mean(
+                (target_features['conv4_2'] - content_features['conv4_2'])**2)
 
-        # the style loss
-        # initialize the style loss to 0
-        style_loss = 0
-        # then add to it for each layer's gram matrix loss
-        for layer in style_weights:
-            # get the "target" style representation for the layer
-            target_feature = target_features[layer]
-            target_gram = gram_matrix(target_feature)
-            _, d, h, w = target_feature.shape
-            # get the "style" style representation
-            style_gram = style_grams[layer]
-            # the style loss for one layer, weighted appropriately
-            layer_style_loss = style_weights[layer] * \
-                torch.mean((target_gram - style_gram)**2)
-            # add to the style loss
-            style_loss += layer_style_loss / (d * h * w)
+            # the style loss
+            # initialize the style loss to 0
+            style_loss = 0
+            # then add to it for each layer's gram matrix loss
+            for layer in style_weights:
+                # get the "target" style representation for the layer
+                target_feature = target_features[layer]
+                target_gram = gram_matrix(target_feature)
+                _, d, h, w = target_feature.shape
+                # get the "style" style representation
+                style_gram = style_grams[layer]
+                # the style loss for one layer, weighted appropriately
+                layer_style_loss = style_weights[layer] * \
+                    torch.mean((target_gram - style_gram)**2)
+                # add to the style loss
+                style_loss += layer_style_loss / (d * h * w)
 
-        # calculate the *total* loss
-        total_loss = content_weight * content_loss + style_weight * style_loss
+            # calculate the *total* loss
+            total_loss = content_weight * content_loss + style_weight * style_loss
 
-        # update your target image
-        optimizer.zero_grad()
-        total_loss.backward()
-        optimizer.step()
+            # update your target image
+            optimizer.zero_grad()
+            total_loss.backward()
+            optimizer.step()
 
-        # display intermediate images and print the loss
-        if ii % show_every == 0:
-            print('Total loss: ', total_loss.item())
-            plt.imshow(im_convert(target))
-            plt.show()
+            # display intermediate images and print the loss
+            if ii % show_every == 0:
+                print('Total loss: ', total_loss.item())
+                plt.imshow(im_convert(target))
+                plt.show()
 
-    # display content and final, target image
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 10))
-    ax1.imshow(im_convert(content))
-    ax2.imshow(im_convert(target))
+        # display content and final, target image
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 10))
+        ax1.imshow(im_convert(content))
+        ax2.imshow(im_convert(target))
+        return target
 
 
 if __name__ == '__main__':
