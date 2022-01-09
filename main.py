@@ -1,0 +1,39 @@
+from flask import Flask, request, jsonify, send_file
+import werkzeug    
+import base64
+from io import BytesIO
+from PIL import Image
+
+
+
+app = Flask(__name__)
+
+@app.route('/upload', methods=['POST','GET'])
+def upload():
+    if(request.method == 'POST'):
+        styleimage = request.files['styleimage']
+        objectimage = request.files['objectimage']
+        stylefilename = werkzeug.utils.secure_filename(styleimage.filename)
+        objectfilename = werkzeug.utils.secure_filename(objectimage.filename)
+        styleimage.save("./uploads/style"+stylefilename)
+        objectimage.save("./uploads/object"+objectfilename)
+
+        #return image as bytedata
+        # im_arr: image in Numpy one-dim array format.
+        img = Image.open('test.jpeg')
+        im_file = BytesIO()
+        img.save(im_file, format="JPEG")
+        im_bytes = im_file.getvalue()  # im_bytes: image in binary format.
+        im_b64 = base64.b64encode(im_bytes)
+        return jsonify({'image': im_b64.decode('utf-8')})
+
+    else:
+        img = Image.open('error.jpg')
+        im_file = BytesIO()
+        img.save(im_file, format="JPEG")
+        im_bytes = im_file.getvalue()  # im_bytes: image in binary format.
+        im_b64 = base64.b64encode(im_bytes)
+        return jsonify({'image': im_b64.decode('utf-8')})
+
+if __name__=='__main__':
+    app.run(debug = True, port=4000)
