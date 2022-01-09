@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
 
   uploadImage() async {
     final request = http.MultipartRequest(
-        "POST", Uri.parse("https://bb0a-27-0-178-125.ngrok.io/upload"));
+        "POST", Uri.parse("https://28fd-27-0-178-125.ngrok.io/upload"));
 
     final headers = {"Content-type": "multipart/form-data"};
 
@@ -62,6 +62,12 @@ class _HomePageState extends State<HomePage> {
     final resJson = jsonDecode(res.body);
     message = resJson['message'];
     setState(() {});
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ShowImage(
+                  message: message.toString(),
+                )));
   }
 
   File? styleimage;
@@ -106,10 +112,7 @@ class _HomePageState extends State<HomePage> {
                             MaterialStateProperty.all(Colors.deepPurpleAccent)),
                     onPressed: () => {
                           //call python api
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ShowImage()))
+                          uploadImage(),
                         },
                     icon: Icon(
                       Icons.file_upload,
