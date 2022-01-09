@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
 
   uploadImage() async {
     final request = http.MultipartRequest(
-        "POST", Uri.parse("https://3afd-27-0-178-125.ngrok.io/upload"));
+        "POST", Uri.parse("https://4cec-27-0-178-125.ngrok.io/upload"));
 
     final headers = {"Content-type": "multipart/form-data"};
 

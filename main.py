@@ -9,6 +9,8 @@ import model
 
 app = Flask(__name__)
 
+
+
 @app.route('/upload', methods=['POST','GET'])
 def upload():
     if(request.method == 'POST'):
@@ -22,7 +24,7 @@ def upload():
         #return image as bytedata
         # im_arr: image in Numpy one-dim array format.
         cwd = os.getcwd()
-        output_img = Model(stylefilename, objectfilename)
+        output_img = model.main(stylefilename, objectfilename)
         # img = Image.open(f'{cwd}/outputs/test.jpeg')
         img = output_img
         im_file = BytesIO()

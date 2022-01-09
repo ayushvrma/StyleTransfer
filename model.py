@@ -19,7 +19,7 @@ class Model:
         # this.objectfilename = objectfilename
         print('obj made')
 
-    def load_image(img_path, max_size=400, shape=None):
+    def load_image(self,img_path, max_size=400, shape=None):
         ''' Load in and transform an image, making sure the image
         is <= 400 pixels in the x-y dims.'''
         if "http" in img_path:
@@ -53,7 +53,7 @@ class Model:
 
     # helper function for un-normalizing an image 
     # and converting it from a Tensor image to a NumPy image for display
-    def im_convert(tensor):
+    def im_convert(self,tensor):
         """ Display a tensor as an image. """
         
         image = tensor.to("cpu").clone().detach()
@@ -70,7 +70,7 @@ class Model:
     # ax2.imshow(im_convert(style))
     # print out VGG19 structure so you can see the names of various layers
     # print(vgg)
-    def get_features(image, model, layers=None):
+    def get_features(self,image, model, layers=None):
         """ Run an image forward through a model and get the features for 
             a set of layers. Default layers are for VGGNet matching Gatys et al (2016)
         """
@@ -93,7 +93,7 @@ class Model:
 
         return features
 
-    def gram_matrix(tensor):
+    def gram_matrix(self,tensor):
         """ Calculate the Gram Matrix of a given tensor 
             Gram Matrix: https://en.wikipedia.org/wiki/Gramian_matrix
         """
@@ -109,8 +109,8 @@ class Model:
 
         return gram
 
-def main():
-    model = Model('', '')
+def main(stylefilename, objectfilename):
+    model = Model(stylefilename, objectfilename)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     vgg = models.vgg19(pretrained=True).features
     vgg.to(device)
@@ -131,7 +131,7 @@ def main():
     style_features = model.get_features(style, vgg)
 
     # calculate the gram matrices for each layer of our style representation
-    style_grams = {layer: gram_matrix(style_features[layer]) for layer in style_features}
+    style_grams = {layer: model.gram_matrix(style_features[layer]) for layer in style_features}
 
     # create a third "target" image and prep it for change
     # it is a good idea to start off with the target as a copy of our *content* image
@@ -197,7 +197,7 @@ def main():
             # plt.show()
 
     # display content and final, target image
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 10))
+    # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(20, 10))
     # ax1.imshow(im_convert(content))
     # ax2.imshow(im_convert(target))
     return model.im_convert(target)
