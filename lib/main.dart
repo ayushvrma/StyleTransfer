@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
@@ -39,7 +41,7 @@ class _HomePageState extends State<HomePage> {
 
   uploadImage() async {
     final request = http.MultipartRequest(
-        "POST", Uri.parse("https://28fd-27-0-178-125.ngrok.io/upload"));
+        "POST", Uri.parse("https://6740-27-0-178-125.ngrok.io/upload"));
 
     final headers = {"Content-type": "multipart/form-data"};
 
@@ -58,21 +60,36 @@ class _HomePageState extends State<HomePage> {
 
     request.headers.addAll(headers);
     final response = await request.send();
+    // response.content
+    // final responseData = await response.stream.bytesToString();
     http.Response res = await http.Response.fromStream(response);
+// display it with the Image.memory widget
+    // Image.memory(base64Decode(res.body));
     final resJson = jsonDecode(res.body);
-    message = resJson['message'];
+    // File file = json.decode(res.body);
+    // final decodedBytes = base64Decode(res.body);
+
+    // final decodedImage = Image.memory(decodedBytes);
+    print(resJson);
+
+    // image = resJson['image'];
+    print(res.body);
+    String img = resJson['image'];
+    //convert to bytes
+    Uint8List bytes = base64.decode(img);
+    Image finalimg = Image.memory(bytes);
     setState(() {});
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => ShowImage(
-                  message: message.toString(),
+                  img: finalimg,
                 )));
   }
 
   File? styleimage;
   File? objectimage;
-  String? message;
+  File? image;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
