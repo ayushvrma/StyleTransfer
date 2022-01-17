@@ -26,7 +26,8 @@ def upload():
         cwd = os.getcwd()
         output_img = model.main(stylefilename, objectfilename)
         # img = Image.open(f'{cwd}/outputs/test.jpeg')
-        img = output_img
+        img = Image.fromarray((output_img * 255).astype(np.uint8))
+        #img = Image.fromarray(output_img)
         im_file = BytesIO()
         img.save(im_file, format="JPEG")
         im_bytes = im_file.getvalue()  # im_bytes: image in binary format.

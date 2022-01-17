@@ -154,7 +154,7 @@ def main(stylefilename, objectfilename):
 
     # iteration hyperparameters
     optimizer = optim.Adam([target], lr=0.003)
-    steps = 2000  # decide how many iterations to update your image (5000)
+    steps = 800  # decide how many iterations to update your image (5000)
 
     for ii in range(1, steps+1):
 
