@@ -1,15 +1,17 @@
 # Style Transfer
 
-This repository contains an implementation of neural style transfer using deep learning techniques. Neural style transfer is a technique that allows you to apply the style of one image (the style image) to the content of another image (the content image), resulting in a new image that combines the content of the content image with the style of the style image.
+This repository contains an implementation of neural style transfer using deep learning techniques, a Flutter frontend and Flask App Backend. Neural style transfer is a technique that allows you to apply the style of one image (the style image) to the content of another image (the content image), resulting in a new image that combines the content of the content image with the style of the style image.
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Examples](#examples)
-- [Contributing](#contributing)
-- [License](#license)
+- [Style Transfer](#style-transfer)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Examples](#examples)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 ## Introduction
 
@@ -30,32 +32,23 @@ To use this style transfer implementation, please follow the steps below:
 2. Install the required dependencies by running the following command:
 
    ```
-   pip install -r requirements.txt
+   flutter pub get
    ```
-
-   This will install the necessary packages, including PyTorch and torchvision.
+   This will install the necessary packages, including PyTorch and Flutter.
 
 ## Usage
 
-To create your own stylized images, you need a content image and a style image. You can use the provided images in the `images/content` and `images/style` directories, or you can use your own images.
-
-To run the style transfer algorithm, use the `style_transfer.py` script. Here is the basic usage:
-
-```
-python style_transfer.py --content <path_to_content_image> --style <path_to_style_image> --output <output_image_name>
-```
-
-For example, to apply the style of "starry_night.jpg" to the content image "london.jpg" and save the output as "output.jpg", you can use the following command:
-
-```
-python style_transfer.py --content images/content/london.jpg --style images/style/starry_night.jpg --output output.jpg
-```
-
-You can also specify additional parameters such as `--iterations`, `--content-weight`, `--style-weight`, and `--style-layer-weight`, to customize the stylization process. For more details on these parameters, refer to the documentation provided in the script.
-
+By running `main.py` you'd be creating a flask backend server for the Frontend of a Flutter App. Simply upload 2 images and get a combined StyleTransfer one.
 ## Examples
 
-In the `examples` directory, you can find some example stylized images created using this implementation. These examples demonstrate the range of artistic effects that can be achieved by combining different content and style images.
+<div style="display: flex;">
+    <div style="flex: 50%; padding: 5px;">
+        <img src="assets/img1.jpeg" alt="Image 1" style="width: 100%;">
+    </div>
+    <div style="flex: 50%; padding: 5px;">
+        <img src="assets/img2.jpeg" alt="Image 2" style="width: 100%;">
+    </div>
+</div>
 
 ## Contributing
 
